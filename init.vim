@@ -3,143 +3,92 @@ filetype off
 map <Space> <Leader>
 set splitbelow
 set splitright
-
+ 
 call plug#begin()
-
+ 
 " Load plugins
 " VIM enhancements
-Plug 'ciaranm/securemodelines'
-
+ 
 " GUI enhancements
-Plug 'itchyny/lightline.vim'
-Plug 'w0rp/ale'
 Plug 'machakann/vim-highlightedyank'
 Plug 'chriskempson/base16-vim'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 
-" Semantic language support
-"Plug 'phildawes/racer'
-"Plug 'racer-rust/vim-racer'
-
-
-" Syntactic language support
-Plug 'cespare/vim-toml'
+"
+"Syntax
 Plug 'rust-lang/rust.vim'
-"
 
+
+"Autocompletion
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'autozimu/LanguageClient-neovim', {
+            \ 'branch': 'next',
+            \ 'do': 'bash install.sh',
+            \ }
+Plug 'w0rp/ale'
+Plug 'OmniSharp/omnisharp-vim'
+
+ 
 call plug#end()
-" Comment lines
-autocmd FileType c,cpp,java,scala let b:comment_leader = '// '
-autocmd FileType sh,ruby,python   let b:comment_leader = '# '
-autocmd FileType conf,fstab       let b:comment_leader = '# '
-autocmd FileType tex              let b:comment_leader = '% '
-autocmd FileType mail             let b:comment_leader = '> '
-autocmd FileType vim              let b:comment_leader = '" '
-noremap <silent> ,cc :<C-B>silent <C-E>s/^/<C-R>=escape(b:comment_leader,'\/')<CR>/<CR>:nohlsearch<CR>
-noremap <silent> ,cu :<C-B>silent <C-E>s/^\V<C-R>=escape(b:comment_leader,'\/')<CR>//e<CR>:nohlsearch<CR>
 
-let g:LanguageClient_autoStart = 1
-let g:LanuageClient_serverCommands = {
-    \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
-    \ 'python': ['/usr/local/bin/pyls'],
-    \ }
+" Tab Config
+set softtabstop=4 " Use 4 spaces when pressing tab.
+set shiftwidth=4 " Shift indentation by 4 spaces.
+set expandtab " Use spaces instead of tab-characters.
+set smarttab " Insert tabs on the start of the line according to shiftwidth.
 
-if has('nvim')
-    set guicursor=n-v-c:block-Cursor/lCursor-blinkon0,i-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor
-    set inccommand=nosplit
-    noremap <C-q> :confirm qall<CR>
-end
-"
-" deal with colors
+" Color Config
 
+colo base16-eighties
 set termguicolors
-" Colors
 set background=dark
 syntax on
-
-" Lightline
-let g:lightline = { 'colorscheme': 'wombat' }
-let g:lightline = {
-      \ 'component_function': {
-      \   'filename': 'LightlineFilename',
-      \ },
-\ }
-function! LightlineFilename()
-  return expand('%:t') !=# '' ? @% : '[No Name]'
-endfunction
-
-
-
-" Linter
-" only lint on save
-let g:ale_lint_on_text_changed = 'never'
-let g:ale_lint_on_insert_leave = 1
-let g:ale_lint_on_save = 1
-let g:ale_lint_on_enter = 0
-let g:ale_virtualtext_cursor = 1
-let g:ale_rust_rls_config = {
-        \ 'rust': {
-                \ 'all_targets': 1,
-                \ 'build_on_save': 0,
-                \ 'clippy_preference': 'on'
-        \ }
-        \ }
-let g:ale_rust_rls_toolchain = ''
-let g:ale_linters = {'rust': ['rls']}
-highlight link ALEWarningSign Todo
-highlight link ALEErrorSign WarningMsg
-highlight link ALEVirtualTextWarning Todo
-highlight link ALEVirtualTextInfo Todo
-highlight link ALEVirtualTextError WarningMsg
-highlight ALEError guibg=None
-highlight ALEWarning guibg=None
-let g:ale_sign_error = "✖"
-let g:ale_sign_warning = "⚠"
-let g:ale_sign_info = "i"
-let g:ale_sign_hint = "➤"
-
-"Completion
-set completeopt=noinsert,menuone,noselect
-" tab to select
-" and don't hijack my enter key
-inoremap <expr><Tab> (pumvisible()?(empty(v:completed_item)?"\<C-n>":"\<C-y>"):"\<Tab>")
-inoremap <expr><CR> (pumvisible()?(empty(v:completed_item)?"\<CR>\<CR>":"\<C-y>"):"\<CR>")
-
+ 
+" Undo Config
 set undodir=~/.vimdid
 set undofile
+ 
+set copyindent " Copy the previous indentation on auto indentation
+set shiftround " Use multiple of shiftwidth when indenting with < and >
+set showmatch " Show matching parenthesis
+set cursorline " Highlight the line the cursor is on
+set nofoldenable " No folding
 
+set relativenumber " Relative line numbering
+set number " Now we have hybrid numbering!
+set hidden " Hide buffers instead of closing them
+set hlsearch " Highlight search terms
+set incsearch " Show mathces as you type
+set gdefault " g flag on by default when searching
+set fileformats=unix,dos,mac
+
+set scrolloff=5 " Always have 5 lines above and below the cursor
+set visualbell " Visual bell instead of beeping
+set noerrorbells " Don't ring the error bells
+set title
+
+
+set noswapfile
+
+set nowrap " Don't wrap lines
 filetype plugin indent on
+set number
 set autoindent
 set timeoutlen=300 " http://stackoverflow.com/questions/2158516/delay-before-o-opens-a-new-line
 set encoding=utf-8
 set scrolloff=2
-set noshowmode
-set noshowcmd
-set lazyredraw
-set hidden
-set nowrap
-set nojoinspaces
-set guioptions-=T " Remove toolbar
-set vb t_vb= " No more beeps
-set backspace=2 " Backspace over newlines
-set nofoldenable
-set ruler " Where am I?
 set ttyfast
-" https://github.com/vim/vim/issues/1735#issuecomment-383353563
-set synmaxcol=400
-set laststatus=2
-set relativenumber " Relative line numbers
-set number " Also show current absolute line
-set diffopt+=iwhite " No whitespace in vimdiff
-" Make diffing better: https://vimways.org/2018/the-power-of-diff/
-set colorcolumn=80 " and give me a colored column
-set showcmd " Show (partial) command in status line.
-set shortmess+=c " don't give |ins-completion-menu| messages.
 " Show those damn hidden characters
 " Verbose: set listchars=nbsp:¬,eol:¶,extends:»,precedes:«,trail:•
 set nolist
 set listchars=nbsp:¬,extends:»,precedes:«,trail:•
-
+ 
+" Remaps
 " Ctrl+c and Ctrl+j as Esc
+nnoremap <Leader>w :w!<CR>
+nnoremap <Leader>q :q<CR>
+nnoremap <leader><leader> <c-^>
 inoremap jk <Esc>
 vnoremap jk <Esc>
 nnoremap jk <Esc>
@@ -149,11 +98,69 @@ cnoremap jk <Esc>
 onoremap jk <Esc>
 lnoremap jk <Esc>
 tnoremap jk <Esc>
-
 nnoremap ; :
 
-nnoremap <Leader>w :w!<CR>
-nnoremap <Leader>q :q<CR>
-nnoremap <leader><leader> <c-^>
 
-colo base16-eighties
+" Airline Config
+let g:airline_powerline_fonts = 1
+let g:airline#extensions#whitespace#checks = []
+let g:airline_section_y = airline#section#create_right(['%{printf("%s%s",&fenc,&ff!="unix"?":".&ff:"")}'])
+let g:airline_section_z = airline#section#create_right(['%3l:%2c'])
+let g:airline#extensions#ctrlp#color_template = 'replace'
+let g:airline#extensions#tabline#enabled = 1
+
+" Deoplete Config
+ let g:deoplete#enable_at_startup = 1
+" Deoplete tab-complete
+inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
+autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+
+call deoplete#custom#source('_',
+            \ 'disabled_syntaxes', ['Comment', 'String'])
+
+call deoplete#custom#option('sources', {
+            \ 'c': ['LanguageClient'],
+            \ 'cpp': ['LanguageClient'],
+            \ 'rust': ['LanguageClient'],
+            \ 'python': ['LanguageClient'],
+            \})
+
+" LanguageClient-Neovim setup
+let g:LanguageClient_autoStart = 1
+let g:LanguageClient_loadSettings = 1
+let g:LanguageClient_diagnosticsEnable = 0
+let g:LanguageClient_settingsPath = '/Users/wesleygahr/.config/nvim/settings.json'
+let g:LanguageClient_serverCommands = {
+    \ 'python': ['pyls'],
+    \ 'rust': ['rls'],
+    \ 'php': ['php', '~/.tooling/php-language-server/bin/php-language-server.php'],
+    \ 'sh': ['bash-language-sever', 'start'],
+    \ 'c': ['ccls', '--log-file=/tmp/cc.log'],
+    \ 'cpp': ['ccls', '--log-file=/tmp/cc.log'],
+    \ 'cuda': ['ccls', '--log-file=/tmp/cc.log'],
+    \ 'objc': ['ccls', '--log-file=/tmp/cc.log'],
+    \ 'javascript': ['~/source/javascript-typescript-langserver/lib/language-server-stdio'],
+    \ }
+
+" Ale config
+let g:ale_rust_rls_toolchain = "stable"
+let g:ale_linters = {
+            \ 'python': ['pylint', 'pyls'],
+            \ 'rust': ['rls', 'cargo'],
+            \ 'php': ['langserver', 'php_cs_fixer'],
+            \ 'bash': ['shellcheck'],
+            \ 'c': ['ccls']
+            \ }
+
+let g:ale_fix_on_save = 1
+let g:ale_fixers = {
+            \ 'rust': ['rustfmt'],
+            \ 'php': ['php_cs_fixer'],
+            \ 'bash': ['shfmt'],
+            \ 'c': ['uncrustify'],
+            \ 'python': ['black'],
+            \ }
+
+noremap <silent> H :call LanguageClient_textDocument_hover()<CR>
+noremap <silent> Z :call LanguageClient_textDocument_definition()<CR>
+noremap <silent> S :call LanugageClient_textDocument_documentSymbol()<CR>
