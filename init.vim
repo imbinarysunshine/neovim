@@ -100,6 +100,13 @@ lnoremap jk <Esc>
 tnoremap jk <Esc>
 nnoremap ; :
 
+" Jump to start and end of lines using the home row keys
+map H ^
+map L $
+
+" Stop searching
+vnoremap :nohlsearch<cr>
+nnoremap :nohlsearch<cr>
 
 " Airline Config
 let g:airline_powerline_fonts = 1
@@ -129,7 +136,6 @@ call deoplete#custom#option('sources', {
 let g:LanguageClient_autoStart = 1
 let g:LanguageClient_loadSettings = 1
 let g:LanguageClient_diagnosticsEnable = 0
-let g:LanguageClient_settingsPath = '/Users/wesleygahr/.config/nvim/settings.json'
 let g:LanguageClient_serverCommands = {
     \ 'python': ['pyls'],
     \ 'rust': ['rls'],
@@ -143,7 +149,7 @@ let g:LanguageClient_serverCommands = {
     \ }
 
 " Ale config
-let g:ale_rust_rls_toolchain = "stable"
+let g:ale_rust_rls_toolchain = "nightly"
 let g:ale_linters = {
             \ 'python': ['pylint', 'pyls'],
             \ 'rust': ['rls', 'cargo'],
